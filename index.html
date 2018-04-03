@@ -1,0 +1,100 @@
+<html><head>
+    <style>
+        
+    </style>
+ 
+    <style type="text/css">/* Chart.js */
+@-webkit-keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}@keyframes chartjs-render-animation{from{opacity:0.99}to{opacity:1}}.chartjs-render-monitor{-webkit-animation:chartjs-render-animation 0.001s;animation:chartjs-render-animation 0.001s;}</style>
+</head>
+<body> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+   <div style="width:550px; height:320;">
+<canvas id="myChart" width="550" height="320" class="chartjs-render-monitor" style="display: block; width: 550PX; height: 320px;"></canvas>
+   </div>
+ 
+ <script type="text/javascript">
+                var canvas = document.getElementById('myChart');
+        window.chartColors = {
+            red: 'rgb(255, 99, 132)',
+            orange: 'rgb(255, 159, 64)',
+            yellow: 'rgb(255, 205, 86)',
+            green: 'rgb(51, 204, 51)',
+            blue: 'rgb(54, 162, 235)',
+            purple: 'rgb(153, 102, 255)',
+            grey: 'rgb(201, 203, 207)'
+        };
+
+        var myLineChart = new Chart(canvas,
+            {
+                type: 'line',
+                data: {
+                    labels: ['1', '2', '3', '4', '5'],
+                    datasets: [
+                        {
+                            label: '# of Votes',
+                            fill: false,
+                            backgroundColor: window.chartColors.blue,
+                            borderColor: window.chartColors.blue,
+                            borderWidth: 1,
+                            scaleOverride: true,
+                            scaleSteps: 30,
+                            data: [2, 5, 2, 9, 6.3]
+                        }
+                        
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: 'Gabinete 1'
+                    },
+                    
+                    backgroundRules: [{
+                        backgroundColor: window.chartColors.green, 
+                        yAxisSegement: 6
+                    }, {
+                        backgroundColor: window.chartColors.grey,
+                        yAxisSegement: 12
+                    }, {
+                        backgroundColor: window.chartColors.red,
+                        yAxisSegement: Infinity
+                    }],
+                   
+                    scales: {
+                        yAxes: [{
+                        stacked: true,
+                            ticks: {
+                                beginAtZero: true,
+                                stepSize: 1
+                            }
+                        }]
+                    },
+            
+            
+            events: ['click'] 
+                },
+                plugins: [{
+                    beforeDraw: function (chart) {
+                        var ctx = chart.chart.ctx;
+                        var ruleIndex = 0;
+                        var rules = chart.chart.options.backgroundRules;
+                        var yaxis = chart.chart.scales["y-axis-0"];
+                        var xaxis = chart.chart.scales["x-axis-0"];
+                        var partPercentage = 1 / (yaxis.ticksAsNumbers.length - 1);
+                        for (var i = yaxis.ticksAsNumbers.length - 1; i > 0; i--) {
+                            if (yaxis.ticksAsNumbers[i] < rules[ruleIndex].yAxisSegement) {
+                                ctx.fillStyle = rules[ruleIndex].backgroundColor;
+                                ctx.fillRect(xaxis.left, yaxis.top + ((i - 1) * (yaxis.height * partPercentage)), xaxis.width, yaxis.height * partPercentage);
+                            } else {
+                                ruleIndex++;
+                                i++;
+                            }
+                        }
+                    }
+                }]
+            });
+    </script>
+</body>
+
+</html>
